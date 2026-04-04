@@ -4,9 +4,25 @@ import {
   forwardRef,
   useImperativeHandle,
   useRef,
-  useState,
+  useCallback,
 } from "react";
 import { motion, useAnimation } from "framer-motion";
+
+const imageCache = new Set<string>();
+
+function preloadImage(src: string): Promise<void> {
+  if (imageCache.has(src)) return Promise.resolve();
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => { imageCache.add(src); resolve(); };
+    img.onerror = () => resolve();
+    img.src = src;
+  });
+}
+
+export function preloadAllImages(srcs: string[]) {
+  srcs.forEach((s) => preloadImage(s));
+}
 
 export interface LetterTrailImageRef {
   show: (params: {
@@ -31,7 +47,13 @@ const LetterTrailImage = forwardRef<LetterTrailImageRef, LetterTrailImageProps>(
     const isRunning = useRef(false);
     const imgRef = useRef<HTMLImageElement>(null);
     const currentLetterIndex = useRef(-1);
-    const [src, setSrc] = useState("");
+    const currentSrc = useRef("");
+
+    const handleClick = useCallback(() => {
+      if (isRunning.current && onClick && currentLetterIndex.current >= 0) {
+        onClick(currentLetterIndex.current);
+      }
+    }, [onClick]);
 
     useImperativeHandle(ref, () => ({
       isActive: () => isRunning.current,
@@ -40,19 +62,28 @@ const LetterTrailImage = forwardRef<LetterTrailImageRef, LetterTrailImageProps>(
         if (!el) return;
 
         currentLetterIndex.current = letterIndex;
-        setSrc(imageSrc);
 
-        // Wait a tick for src to update so getBoundingClientRect is accurate
-        await new Promise((r) => requestAnimationFrame(r));
+        controls.stop();
+        controls.set({ opacity: 0 });
+
+        el.src = imageSrc;
+        currentSrc.current = imageSrc;
+        el.style.display = "block";
+
+        if (!el.complete || el.naturalHeight === 0) {
+          await new Promise<void>((resolve) => {
+            const done = () => { el.removeEventListener("load", done); el.removeEventListener("error", done); resolve(); };
+            el.addEventListener("load", done, { once: true });
+            el.addEventListener("error", done, { once: true });
+          });
+        }
 
         const rect = el.getBoundingClientRect();
         const center = (posX: number, posY: number) =>
           `translate(${posX - rect.width / 2}px, ${posY - rect.height / 2}px)`;
 
-        controls.stop();
-
         controls.set({
-          opacity: isRunning.current ? 1 : 0.85,
+          opacity: 0.85,
           zIndex,
           transform: `${center(x, y)} scale(0.95)`,
         });
@@ -87,15 +118,10 @@ const LetterTrailImage = forwardRef<LetterTrailImageRef, LetterTrailImageProps>(
         ref={imgRef}
         initial={{ opacity: 0, scale: 1 }}
         animate={controls}
-        src={src || undefined}
         alt=""
-        className="absolute max-h-36 max-w-32 cursor-none rounded-sm object-contain shadow-md md:max-h-44 md:max-w-36"
-        style={{ width: "auto", height: "auto", display: src ? "block" : "none" }}
-        onClick={() => {
-          if (isRunning.current && onClick && currentLetterIndex.current >= 0) {
-            onClick(currentLetterIndex.current);
-          }
-        }}
+        className="absolute max-h-36 max-w-32 rounded-sm object-contain shadow-md md:max-h-44 md:max-w-36"
+        style={{ width: "auto", height: "auto", display: "none" }}
+        onClick={handleClick}
       />
     );
   }

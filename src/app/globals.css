@@ -10,8 +10,10 @@
   --font-mono: var(--font-geist-mono);
 }
 
-* {
-  cursor: none;
+@media (hover: hover) and (pointer: fine) {
+  * {
+    cursor: none;
+  }
 }
 
 html {
@@ -24,6 +26,8 @@ body {
   color: #1a1a1a;
   font-family: var(--font-sans), system-ui, sans-serif;
   overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
 }
 
 ::selection {

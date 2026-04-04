@@ -11,7 +11,7 @@ export const letters: Letter[] = [
   { id: "01", from: "Dustin", preview: "Happy Birthday Arielle!", image: "/letters/25.png", trailImage: "/letters/25-trail.png" },
   { id: "02", from: "Jairaj", preview: "Hope you have a good one!", image: "/letters/17.png" },
   { id: "03", from: "Gaurav", preview: "Can't wait to see you again soon", image: "/letters/15.png" },
-  { id: "04", from: "Chaitali Aunty & Uncle", preview: "We are happy that you are part of our family!", image: "/letters/22.png", trailImage: "/letters/22-trail.png" },
+  { id: "04", from: "Modi Parents", preview: "We are happy that you are part of our family!", image: "/letters/22.png", trailImage: "/letters/22-trail.png" },
   { id: "05", from: "Yagnya", preview: "Here's to getting better at boardgames and longer hikes", image: "/letters/04.png" },
   { id: "06", from: "Baggy", preview: "Thank you for being such a kind-hearted person", image: "/letters/26.png", trailImage: "/letters/26-trail.png" },
   { id: "07", from: "Radha", preview: "I love you & am very grateful to be apart of your life", image: "/letters/31.png", trailImage: "/letters/31-trail.png" },
@@ -37,7 +37,7 @@ export const letters: Letter[] = [
   { id: "27", from: "Tika", preview: "I'm so grateful to have you as a friend", image: "/letters/02.png" },
   { id: "28", from: "Srija", preview: "I hope you have the best birthday ever", image: "/letters/06.png" },
   { id: "29", from: "Sanjana", preview: "It would be impossible to make it as sweet as you", image: "/letters/16.png" },
-  { id: "30", from: "Danial", preview: "May your ducks be in a row and arrows fly straight", image: "/letters/08.png" },
+  { id: "30", from: "Danial", preview: "May your ducks be in a row and arrows fly straight", image: "/letters/08.png", trailImage: "/letters/08-trail.png" },
   { id: "31", from: "Haley", preview: "I am so proud of you, your strength, your grace", image: "/letters/12.png" },
   { id: "32", from: "Isha", preview: "I feel so lucky to call you one of my closest friends", image: "/letters/29.png", trailImage: "/letters/29-trail.png" },
 ];

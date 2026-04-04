@@ -29,7 +29,7 @@ export default function LetterRow({
       onMouseLeave={onMouseLeave}
       onClick={onClick}
     >
-      <div className="flex cursor-none items-baseline justify-between gap-4 px-2 md:px-4">
+      <div className="flex items-baseline justify-between gap-4 px-2 md:px-4">
         <div className="flex items-baseline gap-4 md:gap-8">
           <span className="text-xs tabular-nums text-muted transition-colors duration-300 group-hover:text-accent">
             {letter.id}

@@ -1,11 +1,11 @@
 "use client";
 
-import { createRef, useCallback, useRef, useState } from "react";
-import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
+import { createRef, useCallback, useEffect, useRef, useState } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { useMousePosition } from "@/hooks/useMousePosition";
 import { getDistance, lerp } from "@/lib/utils";
 import { letters } from "@/lib/letters";
-import LetterTrailImage, { type LetterTrailImageRef } from "./LetterTrailImage";
+import LetterTrailImage, { type LetterTrailImageRef, preloadAllImages } from "./LetterTrailImage";
 import LetterLightbox from "./LetterLightbox";
 import Heart from "./illustrations/Heart";
 
@@ -15,6 +15,10 @@ export default function HeroSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const trailContainerRef = useRef<HTMLDivElement>(null);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+
+  useEffect(() => {
+    preloadAllImages(letters.map((l) => l.image));
+  }, []);
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -94,10 +98,10 @@ export default function HeroSection() {
         className="relative flex items-center justify-center overflow-hidden"
         style={{ height: "calc(var(--vh, 1vh) * 100)" }}
       >
-        {/* Image trail container */}
+        {/* Image trail container — pointer-events disabled on touch devices so scrolling works */}
         <div
           ref={trailContainerRef}
-          className="absolute inset-0 z-10"
+          className="absolute inset-0 z-10 pointer-events-none md:pointer-events-auto"
         >
           {trailsRef.current.map((ref, i) => (
             <LetterTrailImage
@@ -108,129 +112,129 @@ export default function HeroSection() {
           ))}
         </div>
 
-        {/* Content + surrounding drawings */}
+        {/* Scroll effects wrapper for all decorative content */}
         <motion.div
-          className="relative z-20 flex flex-col items-center gap-4 px-6 text-center pointer-events-none"
+          className="absolute inset-0 z-20 pointer-events-none"
           style={{ scale, filter: filterBlur, opacity }}
         >
-          {/* Drawings — fade out when mouse trail is active */}
-          <motion.div
-            className="absolute inset-0"
-            initial={{ opacity: 1 }}
-            animate={{ opacity: drawingsVisible ? 1 : 0 }}
-            transition={{ duration: drawingsVisible ? 0.8 : 0.4, ease: "easeInOut" }}
-          >
-            {/* Top-center — 27th */}
-            <motion.img
-              src="/drawings/twentyseventh.png"
-              alt=""
-              className="absolute -top-10 left-1/2 -translate-x-1/2 h-auto w-12 md:-top-14 md:w-16"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.6 }}
-              transition={{ duration: 1.5, delay: 1 }}
-            />
-            {/* Top-right — Balloons */}
-            <motion.img
-              src="/drawings/balloons.png"
-              alt=""
-              className="absolute -top-14 -right-4 h-auto w-20 md:-right-20 md:-top-16 md:w-28"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.7 }}
-              transition={{ duration: 1.5, delay: 1.1 }}
-            />
-            {/* Right upper — Miffy bunny */}
-            <motion.img
-              src="/drawings/miffy_bunny.png"
-              alt=""
-              className="absolute -top-2 -right-10 h-auto w-16 md:-right-26 md:-top-4 md:w-22"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.65 }}
-              transition={{ duration: 1.5, delay: 1.2 }}
-            />
-            {/* Right middle — Happy Birthday text */}
-            <motion.img
-              src="/drawings/happy_birthday_text.png"
-              alt=""
-              className="absolute top-1/2 -right-12 -translate-y-1/2 h-auto w-24 md:-right-36 md:w-36"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.6 }}
-              transition={{ duration: 1.5, delay: 1.3 }}
-            />
-            {/* Bottom-right — Dog on skateboard */}
-            <motion.img
-              src="/drawings/dog.png"
-              alt=""
-              className="absolute -bottom-14 -right-2 h-auto w-20 md:-bottom-18 md:-right-12 md:w-28"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.55 }}
-              transition={{ duration: 1.5, delay: 1.4 }}
-            />
-            {/* Bottom-center — Small symbol */}
-            <motion.img
-              src="/drawings/small_symbol.png"
-              alt=""
-              className="absolute -bottom-10 left-1/2 -translate-x-1/2 h-auto w-8 md:-bottom-14 md:w-10"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.55 }}
-              transition={{ duration: 1.5, delay: 1.5 }}
-            />
-            {/* Bottom-left — Coffee cup */}
-            <motion.img
-              src="/drawings/coffee_cup.png"
-              alt=""
-              className="absolute -bottom-14 -left-2 h-auto w-10 md:-bottom-18 md:-left-12 md:w-14"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.6 }}
-              transition={{ duration: 1.5, delay: 1.6 }}
-            />
-            {/* Left lower — Cat */}
-            <motion.img
-              src="/drawings/cat.png"
-              alt=""
-              className="absolute bottom-4 -left-10 h-auto w-14 md:-left-26 md:bottom-2 md:w-20"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.55 }}
-              transition={{ duration: 1.5, delay: 1.7 }}
-            />
-            {/* Left middle — Hearts */}
-            <motion.img
-              src="/drawings/hearts.png"
-              alt=""
-              className="absolute top-1/3 -left-8 h-auto w-14 md:-left-20 md:w-20"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.7 }}
-              transition={{ duration: 1.5, delay: 1.8 }}
-            />
-            {/* Top-left — Cake & Gift */}
-            <motion.img
-              src="/drawings/cake_and_gift.png"
-              alt=""
-              className="absolute -top-14 -left-6 h-auto w-20 md:-left-24 md:-top-16 md:w-28"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.6 }}
-              transition={{ duration: 1.5, delay: 1.9 }}
-            />
-            {/* Left upper — Chinese characters */}
-            <motion.img
-              src="/drawings/chinese.png"
-              alt=""
-              className="absolute top-0 -left-14 h-auto w-5 md:-left-32 md:-top-2 md:w-8"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.55 }}
-              transition={{ duration: 1.5, delay: 2 }}
-            />
-            {/* Right lower — Smiley face */}
-            <motion.img
-              src="/drawings/smiley_face.png"
-              alt=""
-              className="absolute bottom-0 -right-6 h-auto w-10 md:-right-18 md:-bottom-2 md:w-14"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.6 }}
-              transition={{ duration: 1.5, delay: 2.1 }}
-            />
-          </motion.div>
+        {/* Drawings at viewport edges — fade out during mouse trail */}
+        <motion.div
+          className="absolute inset-0"
+          initial={{ opacity: 1 }}
+          animate={{ opacity: drawingsVisible ? 1 : 0 }}
+          transition={{ duration: drawingsVisible ? 0.8 : 0.4, ease: "easeInOut" }}
+        >
+          {/* Top-left corner */}
+          <motion.img
+            src="/drawings/cake_and_gift.png"
+            alt=""
+            className="absolute top-6 left-4 h-auto w-16 md:top-8 md:left-8 md:w-24"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.6 }}
+            transition={{ duration: 1.5, delay: 1 }}
+          />
+          <motion.img
+            src="/drawings/chinese.png"
+            alt=""
+            className="absolute top-6 left-24 h-auto w-4 md:top-10 md:left-36 md:w-7"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.55 }}
+            transition={{ duration: 1.5, delay: 2 }}
+          />
 
-          {/* Foreground — always visible */}
+          {/* Top-right corner */}
+          <motion.img
+            src="/drawings/balloons.png"
+            alt=""
+            className="absolute top-4 right-4 h-auto w-16 md:top-6 md:right-8 md:w-24"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.7 }}
+            transition={{ duration: 1.5, delay: 1.1 }}
+          />
+          <motion.img
+            src="/drawings/twentyseventh.png"
+            alt=""
+            className="absolute top-4 right-24 h-auto w-10 md:top-6 md:right-36 md:w-14"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.6 }}
+            transition={{ duration: 1.5, delay: 1.2 }}
+          />
+
+          {/* Left edge */}
+          <motion.img
+            src="/drawings/hearts.png"
+            alt=""
+            className="absolute top-1/3 left-4 h-auto w-12 md:left-8 md:w-18"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.7 }}
+            transition={{ duration: 1.5, delay: 1.3 }}
+          />
+          <motion.img
+            src="/drawings/cat.png"
+            alt=""
+            className="absolute bottom-1/4 left-4 h-auto w-12 md:left-8 md:w-18"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.55 }}
+            transition={{ duration: 1.5, delay: 1.8 }}
+          />
+
+          {/* Right edge */}
+          <motion.img
+            src="/drawings/miffy_bunny.png"
+            alt=""
+            className="absolute top-1/4 right-4 h-auto w-14 md:right-8 md:w-20"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.65 }}
+            transition={{ duration: 1.5, delay: 1.4 }}
+          />
+          <motion.img
+            src="/drawings/happy_birthday_text.png"
+            alt=""
+            className="absolute top-1/2 right-4 -translate-y-1/2 h-auto w-20 md:right-8 md:w-32"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.6 }}
+            transition={{ duration: 1.5, delay: 1.5 }}
+          />
+          <motion.img
+            src="/drawings/smiley_face.png"
+            alt=""
+            className="absolute bottom-1/4 right-6 h-auto w-10 md:right-10 md:w-14"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.6 }}
+            transition={{ duration: 1.5, delay: 2.1 }}
+          />
+
+          {/* Bottom-left */}
+          <motion.img
+            src="/drawings/coffee_cup.png"
+            alt=""
+            className="absolute bottom-6 left-4 h-auto w-8 md:bottom-8 md:left-8 md:w-12"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.6 }}
+            transition={{ duration: 1.5, delay: 1.6 }}
+          />
+          <motion.img
+            src="/drawings/small_symbol.png"
+            alt=""
+            className="absolute bottom-8 left-20 h-auto w-6 md:bottom-10 md:left-24 md:w-8"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.55 }}
+            transition={{ duration: 1.5, delay: 1.9 }}
+          />
+
+          {/* Bottom-right */}
+          <motion.img
+            src="/drawings/dog.png"
+            alt=""
+            className="absolute bottom-6 right-4 h-auto w-16 md:bottom-8 md:right-8 md:w-24"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.55 }}
+            transition={{ duration: 1.5, delay: 1.7 }}
+          />
+        </motion.div>
+
+        {/* Centered content — always visible */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 px-6 text-center pointer-events-none">
           <div className="relative flex items-center justify-center">
             <motion.img
               src="/drawings/arielle_calligraphy.png"
@@ -264,23 +268,36 @@ export default function HeroSection() {
             <Heart className="w-3.5 h-3.5 text-accent/40" />
           </motion.div>
 
-          {/* Scroll indicator */}
+          {/* Scroll arrow */}
           <motion.div
-            className="mt-16 flex flex-col items-center"
+            className="mt-16 flex flex-col items-center gap-1"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 1.2 }}
           >
-            <motion.div
-              className="h-10 w-px bg-foreground/15"
-              animate={{ scaleY: [0, 1, 0], originY: 0 }}
+            <motion.svg
+              width="16"
+              height="32"
+              viewBox="0 0 16 32"
+              fill="none"
+              className="text-foreground/20"
+              animate={{ y: [0, 6, 0] }}
               transition={{
                 duration: 2,
                 repeat: Infinity,
                 ease: "easeInOut",
               }}
-            />
+            >
+              <path
+                d="M8 0v26m0 0l-6-6m6 6l6-6"
+                stroke="currentColor"
+                strokeWidth="1.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </motion.svg>
           </motion.div>
+        </div>
         </motion.div>
       </section>
 
