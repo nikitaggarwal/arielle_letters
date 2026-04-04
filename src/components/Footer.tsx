@@ -14,7 +14,7 @@ export default function Footer() {
         transition={{ duration: 1 }}
       >
         <div className="flex flex-col items-center gap-4 text-center">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center justify-center gap-2">
             <p className="text-[10px] tracking-[0.4em] uppercase text-muted/40">
               hbd arielle
             </p>

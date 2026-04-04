@@ -1,7 +1,7 @@
 "use client";
 
 import { createRef, useCallback, useRef, useState } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { useMousePosition } from "@/hooks/useMousePosition";
 import { getDistance, lerp } from "@/lib/utils";
 import { letters } from "@/lib/letters";
@@ -35,6 +35,9 @@ export default function HeroSection() {
   const zIndex = useRef(1);
   const letterCycle = useRef(0);
 
+  const [drawingsVisible, setDrawingsVisible] = useState(true);
+  const fadeBackTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   const update = useCallback((cursor: { x: number; y: number }) => {
     const activeCount = trailsRef.current.filter(
       (r) => r.current?.isActive()
@@ -55,6 +58,12 @@ export default function HeroSection() {
     cachedPosition.current = newCache;
 
     if (distance > 120) {
+      setDrawingsVisible(false);
+      if (fadeBackTimer.current) clearTimeout(fadeBackTimer.current);
+      fadeBackTimer.current = setTimeout(() => {
+        setDrawingsVisible(true);
+      }, 2800);
+
       imageIndex.current = (imageIndex.current + 1) % TRAIL_COUNT;
       zIndex.current += 1;
       const currentLetterIdx = letterCycle.current % letters.length;
@@ -67,7 +76,7 @@ export default function HeroSection() {
         newX: cursor.x,
         newY: cursor.y,
         letterIndex: currentLetterIdx,
-        imageSrc: letters[currentLetterIdx].image,
+        imageSrc: letters[currentLetterIdx].trailImage ?? letters[currentLetterIdx].image,
       });
     }
   }, []);
@@ -104,118 +113,142 @@ export default function HeroSection() {
           className="relative z-20 flex flex-col items-center gap-4 px-6 text-center pointer-events-none"
           style={{ scale, filter: filterBlur, opacity }}
         >
-          {/* Drawings surrounding the text — closer to center, 2x darker */}
+          {/* Drawings — fade out when mouse trail is active */}
+          <motion.div
+            className="absolute inset-0"
+            initial={{ opacity: 1 }}
+            animate={{ opacity: drawingsVisible ? 1 : 0 }}
+            transition={{ duration: drawingsVisible ? 0.8 : 0.4, ease: "easeInOut" }}
+          >
+            {/* Top-center — 27th */}
+            <motion.img
+              src="/drawings/twentyseventh.png"
+              alt=""
+              className="absolute -top-10 left-1/2 -translate-x-1/2 h-auto w-12 md:-top-14 md:w-16"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.6 }}
+              transition={{ duration: 1.5, delay: 1 }}
+            />
+            {/* Top-right — Balloons */}
+            <motion.img
+              src="/drawings/balloons.png"
+              alt=""
+              className="absolute -top-14 -right-4 h-auto w-20 md:-right-20 md:-top-16 md:w-28"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.7 }}
+              transition={{ duration: 1.5, delay: 1.1 }}
+            />
+            {/* Right upper — Miffy bunny */}
+            <motion.img
+              src="/drawings/miffy_bunny.png"
+              alt=""
+              className="absolute -top-2 -right-10 h-auto w-16 md:-right-26 md:-top-4 md:w-22"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.65 }}
+              transition={{ duration: 1.5, delay: 1.2 }}
+            />
+            {/* Right middle — Happy Birthday text */}
+            <motion.img
+              src="/drawings/happy_birthday_text.png"
+              alt=""
+              className="absolute top-1/2 -right-12 -translate-y-1/2 h-auto w-24 md:-right-36 md:w-36"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.6 }}
+              transition={{ duration: 1.5, delay: 1.3 }}
+            />
+            {/* Bottom-right — Dog on skateboard */}
+            <motion.img
+              src="/drawings/dog.png"
+              alt=""
+              className="absolute -bottom-14 -right-2 h-auto w-20 md:-bottom-18 md:-right-12 md:w-28"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.55 }}
+              transition={{ duration: 1.5, delay: 1.4 }}
+            />
+            {/* Bottom-center — Small symbol */}
+            <motion.img
+              src="/drawings/small_symbol.png"
+              alt=""
+              className="absolute -bottom-10 left-1/2 -translate-x-1/2 h-auto w-8 md:-bottom-14 md:w-10"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.55 }}
+              transition={{ duration: 1.5, delay: 1.5 }}
+            />
+            {/* Bottom-left — Coffee cup */}
+            <motion.img
+              src="/drawings/coffee_cup.png"
+              alt=""
+              className="absolute -bottom-14 -left-2 h-auto w-10 md:-bottom-18 md:-left-12 md:w-14"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.6 }}
+              transition={{ duration: 1.5, delay: 1.6 }}
+            />
+            {/* Left lower — Cat */}
+            <motion.img
+              src="/drawings/cat.png"
+              alt=""
+              className="absolute bottom-4 -left-10 h-auto w-14 md:-left-26 md:bottom-2 md:w-20"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.55 }}
+              transition={{ duration: 1.5, delay: 1.7 }}
+            />
+            {/* Left middle — Hearts */}
+            <motion.img
+              src="/drawings/hearts.png"
+              alt=""
+              className="absolute top-1/3 -left-8 h-auto w-14 md:-left-20 md:w-20"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.7 }}
+              transition={{ duration: 1.5, delay: 1.8 }}
+            />
+            {/* Top-left — Cake & Gift */}
+            <motion.img
+              src="/drawings/cake_and_gift.png"
+              alt=""
+              className="absolute -top-14 -left-6 h-auto w-20 md:-left-24 md:-top-16 md:w-28"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.6 }}
+              transition={{ duration: 1.5, delay: 1.9 }}
+            />
+            {/* Left upper — Chinese characters */}
+            <motion.img
+              src="/drawings/chinese.png"
+              alt=""
+              className="absolute top-0 -left-14 h-auto w-5 md:-left-32 md:-top-2 md:w-8"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.55 }}
+              transition={{ duration: 1.5, delay: 2 }}
+            />
+            {/* Right lower — Smiley face */}
+            <motion.img
+              src="/drawings/smiley_face.png"
+              alt=""
+              className="absolute bottom-0 -right-6 h-auto w-10 md:-right-18 md:-bottom-2 md:w-14"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.6 }}
+              transition={{ duration: 1.5, delay: 2.1 }}
+            />
+          </motion.div>
 
-          {/* Balloons — top-right */}
-          <motion.img
-            src="/drawings/balloons.png"
-            alt=""
-            className="absolute -top-14 -right-4 h-auto w-20 md:-right-20 md:-top-16 md:w-28"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 0.7 }}
-            transition={{ duration: 1.5, delay: 1 }}
-          />
-          {/* Cake — bottom-left */}
-          <motion.img
-            src="/drawings/cake.png"
-            alt=""
-            className="absolute -bottom-4 -left-8 h-auto w-12 md:-bottom-6 md:-left-20 md:w-16"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 0.6 }}
-            transition={{ duration: 1.5, delay: 1.2 }}
-          />
-          {/* Gift — top-left */}
-          <motion.img
-            src="/drawings/gift.png"
-            alt=""
-            className="absolute -top-10 -left-6 h-auto w-12 md:-left-20 md:-top-12 md:w-16"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 0.6 }}
-            transition={{ duration: 1.5, delay: 1.4 }}
-          />
-          {/* Hearts — bottom-right */}
-          <motion.img
-            src="/drawings/hearts.png"
-            alt=""
-            className="absolute -bottom-4 -right-2 h-auto w-16 md:-bottom-6 md:-right-16 md:w-22"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 0.7 }}
-            transition={{ duration: 1.5, delay: 1.1 }}
-          />
-          {/* Chinese characters — left side */}
-          <motion.img
-            src="/drawings/chinese.png"
-            alt=""
-            className="absolute top-2 -left-12 h-auto w-6 md:-left-28 md:top-0 md:w-10"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 0.55 }}
-            transition={{ duration: 1.5, delay: 1.3 }}
-          />
-          {/* Gujarati script — right side */}
-          <motion.img
-            src="/drawings/gujarati.png"
-            alt=""
-            className="absolute -right-6 bottom-4 h-auto w-16 md:-right-24 md:bottom-2 md:w-24"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 0.55 }}
-            transition={{ duration: 1.5, delay: 1.5 }}
-          />
-          {/* Bunny — upper right */}
-          <motion.img
-            src="/drawings/bunny.png"
-            alt=""
-            className="absolute -top-16 right-4 h-auto w-10 md:-top-20 md:-right-8 md:w-14"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 0.6 }}
-            transition={{ duration: 1.5, delay: 1.6 }}
-          />
-          {/* "27" — lower left */}
-          <motion.img
-            src="/drawings/twentyseven.png"
-            alt=""
-            className="absolute -bottom-2 -left-10 h-auto w-10 md:-left-24 md:-bottom-2 md:w-14"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 0.55 }}
-            transition={{ duration: 1.5, delay: 1.7 }}
-          />
-          {/* Dog on skateboard — bottom center-left */}
-          <motion.img
-            src="/drawings/dog.png"
-            alt=""
-            className="absolute -bottom-12 left-0 h-auto w-14 md:-bottom-14 md:-left-4 md:w-20"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 0.55 }}
-            transition={{ duration: 1.5, delay: 1.8 }}
-          />
-          {/* Cat in blanket — left side */}
-          <motion.img
-            src="/drawings/cat.png"
-            alt=""
-            className="absolute -left-6 bottom-8 h-auto w-10 md:-left-24 md:bottom-6 md:w-16"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 0.55 }}
-            transition={{ duration: 1.5, delay: 2 }}
-          />
-
-          {/* Snoopy */}
-          <motion.img
-            src="/snoopy.png"
-            alt="Snoopy with heart"
-            className="mb-2 h-24 w-auto object-contain md:h-32"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.3 }}
-          />
-
-          {/* Handwritten "arielle" from Avika's letter */}
-          <motion.img
-            src="/drawings/arielle_calligraphy.png"
-            alt="Arielle"
-            className="h-auto w-[clamp(12rem,40vw,28rem)] object-contain"
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.4, ease: [0.25, 0.1, 0, 1] }}
-          />
+          {/* Foreground — always visible */}
+          <div className="relative flex items-center justify-center">
+            <motion.img
+              src="/drawings/arielle_calligraphy.png"
+              alt="Arielle"
+              className="h-auto w-[clamp(10rem,35vw,24rem)] object-contain"
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, delay: 0.4, ease: [0.25, 0.1, 0, 1] }}
+            />
+            <motion.img
+              src="/snoopy.png"
+              alt="Snoopy with heart"
+              className="absolute -right-12 -bottom-2 h-12 w-auto object-contain md:-right-20 md:-bottom-4 md:h-20"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, delay: 0.3 }}
+            />
+          </div>
 
           {/* Subtitle with hearts */}
           <motion.div
