@@ -25,7 +25,7 @@ export const letters: Letter[] = [
   { id: "15", from: "Meghana", preview: "So glad to be sharing this special bridal era together", image: "/letters/09.png" },
   { id: "16", from: "Mirage", preview: "I love being your friend and future BIL", image: "/letters/13.png" },
   { id: "17", from: "Maanasa", preview: "I drew what my alter ego would be lol", image: "/letters/21.png" },
-  { id: "18", from: "Sara & Mama", preview: "You are the Easter Bunny! We can't wait to see you soon", image: "/letters/20.png" },
+  { id: "18", from: "Sara, Mama, Oreo, & Andrew", preview: "You are the Easter Bunny! We can't wait to see you soon", image: "/letters/20.png" },
   { id: "19", from: "Pranav", preview: "I wish you all the happiness and love in the world", image: "/letters/11.png" },
   { id: "20", from: "Keerthana", preview: "Here's to many more lovely memories together", image: "/letters/10.png" },
   { id: "21", from: "Ishitha", preview: "You're truly such a gem", image: "/letters/23.png", trailImage: "/letters/23-trail.png" },

@@ -142,6 +142,24 @@ export default function HeroSection() {
             transition={{ duration: 1.5, delay: 2 }}
           />
 
+          {/* Top-center */}
+          <motion.img
+            src="/drawings/small_symbol.png"
+            alt=""
+            className="absolute top-8 left-1/2 -translate-x-1/2 h-auto w-6 md:top-10 md:w-8"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.55 }}
+            transition={{ duration: 1.5, delay: 1.9 }}
+          />
+          <motion.img
+            src="/drawings/smiley_face.png"
+            alt=""
+            className="absolute top-6 left-[40%] h-auto w-8 md:top-8 md:w-12"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.55 }}
+            transition={{ duration: 1.5, delay: 2.1 }}
+          />
+
           {/* Top-right corner */}
           <motion.img
             src="/drawings/balloons.png"
@@ -195,14 +213,6 @@ export default function HeroSection() {
             animate={{ opacity: 0.6 }}
             transition={{ duration: 1.5, delay: 1.5 }}
           />
-          <motion.img
-            src="/drawings/smiley_face.png"
-            alt=""
-            className="absolute bottom-1/4 right-6 h-auto w-10 md:right-10 md:w-14"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 0.6 }}
-            transition={{ duration: 1.5, delay: 2.1 }}
-          />
 
           {/* Bottom-left */}
           <motion.img
@@ -212,14 +222,6 @@ export default function HeroSection() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 0.6 }}
             transition={{ duration: 1.5, delay: 1.6 }}
-          />
-          <motion.img
-            src="/drawings/small_symbol.png"
-            alt=""
-            className="absolute bottom-8 left-20 h-auto w-6 md:bottom-10 md:left-24 md:w-8"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 0.55 }}
-            transition={{ duration: 1.5, delay: 1.9 }}
           />
 
           {/* Bottom-right */}
